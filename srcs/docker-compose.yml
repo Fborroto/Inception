@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    depends_on:
+    - wordpress
+    build: ./requirements/nginx
+    ports:
+     - "443:443"
+    volumes:
+     -  wordpress_data:/var/www/html
+    networks:
+      - network
+    restart: always
+
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    build: ./requirements/mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    restart: always
+    networks:
+      - network
+    env_file:
+      - .env
+
+  wordpress:
+    image: wordpress
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    build: ./requirements/wordpress
+    volumes:
+     -  wordpress_data:/var/www/html
+    restart: always
+    networks:
+      - network
+    env_file:
+      - .env
+
+volumes:
+  wordpress_data:
+    name: wordpress_data
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/fborroto/data/wordpress
+      o: bind
+  mariadb_data:
+    name: mariadb_data
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/fborroto/data/mariadb
+      o: bind
+networks:
+  network:
+    driver: bridge
