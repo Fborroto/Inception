@@ -2,7 +2,7 @@
 
 if [ -f ./wp-config.php ]
 then
-	echo "wordpress already downloaded"
+	echo "	already extracted"
 else
 
 

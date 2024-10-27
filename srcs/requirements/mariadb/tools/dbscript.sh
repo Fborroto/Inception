@@ -2,10 +2,10 @@
 
 mysql_install_db
 
-sleep 5
+sleep 10
 /usr/bin/mysqld_safe &
 
-sleep 5
+sleep 10
 
 if [ -d "/var/lib/mysql/$MYSQL_DATABASE" ]
 then 

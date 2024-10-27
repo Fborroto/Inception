@@ -18,7 +18,7 @@ COPY ./conf/www.conf /etc/php82/php-fpm.d/www.conf
 
 RUN  chmod +x /usr/local/bin/scriptwordpress.sh
 
-
+            
 ENTRYPOINT [ "/usr/local/bin/scriptwordpress.sh" ]
 EXPOSE 9000
 
