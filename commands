@@ -2,7 +2,7 @@ docker exec -it <nome-container-mysql> sh
 
 Accedi a MySQL:
 
-mysql -u<MYSQL_USER> -p<MYSQL_PASSWORD>
+mysql -u <MYSQL_USER> -p<MYSQL_PASSWORD>
 
 Controlla se il database esiste:
 
