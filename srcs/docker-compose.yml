@@ -48,14 +48,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/fborroto/data/wordpress
+      device: /home/ranpo/data/wordpress
       o: bind
   mariadb_data:
     name: mariadb_data
     driver: local
     driver_opts:
       type: none
-      device: /home/fborroto/data/mariadb
+      device: /home/ranpo/data/mariadb
       o: bind
 networks:
   network:
