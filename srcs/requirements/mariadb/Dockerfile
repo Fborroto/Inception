@@ -1,21 +1,19 @@
-FROM alpine:3.19
+    FROM alpine:3.19
+    
+    RUN apk add --no-cache mariadb mariadb-client
 
-RUN apk update && apk add mariadb mariadb-client
+    RUN mkdir -p /var/lib/mysql \   
+    && chmod 755 /var/lib/mysql \
+    && chown mysql:mysql /var/lib/mysql
 
-RUN mkdir -p /var/lib/mysql && chown -R mysql:mysql /var/lib/mysql && chmod 777 /var/lib/mysql
+    COPY ./tools/dbscript.sh /usr/local/bin/dbscript.sh
+    COPY ./conf/wordpress.sql /usr/local/bin/wordpress.sql
+    COPY ./conf/mariadb-server.cnf /etc/my.cnf.d/
 
-COPY ./tools/dbscript.sh /usr/local/bin/
+    RUN chmod u+x /usr/local/bin/dbscript.sh /usr/local/bin/wordpress.sql
+    
+    EXPOSE 3306
 
-COPY ./conf/wordpress.sql /usr/local/bin/
+    ENTRYPOINT [ "/usr/local/bin/dbscript.sh" ]
 
-RUN  chmod +x /usr/local/bin/dbscript.sh
-
-COPY		./conf/mariadb-server.cnf /etc/my.cnf.d/mariadb-server.cnf
-
-RUN chmod +x /usr/local/bin/wordpress.sql
-
-EXPOSE 3306
-
-ENTRYPOINT [ "/usr/local/bin/dbscript.sh" ]
-
-CMD ["mysqld"]
+    CMD ["mysqld"]
