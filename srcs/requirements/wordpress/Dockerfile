@@ -1,16 +1,16 @@
-FROM alpine:3.19
+FROM alpine:3.20
 
 RUN apk add --no-cache \
-    php \
-    php-cgi \
-    php-mysqli \
-    php-fpm \
-    php-pdo \
-    php-gd \
-    php-cli \
-    php-mbstring \
-    php-phar \
-    curl
+    curl \
+    php82 \
+    php82-cgi \
+    php82-fpm \
+    php82-mysqli \
+    php82-mbstring \
+    php82-gd \
+    php82-cli \
+    php82-phar \
+    && rm -rf /var/cache/apk/*
 
 RUN wget -q -O /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /usr/local/bin/wp

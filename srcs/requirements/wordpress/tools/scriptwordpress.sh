@@ -1,9 +1,9 @@
 #!/bin/sh
 
-if [ -f ./wp-config.php ]
-then
-	echo "	already extracted"
-else
+	if [ -f ./wp-config.php ]
+	then
+		echo "already extracted"
+	else
 
 
 	curl -O https://wordpress.org/latest.tar.gz
