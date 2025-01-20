@@ -11,3 +11,6 @@ SHOW DATABASES;
 USE your_database_name;
 
 SHOW TABLES;
+
+test TLS 1.3
+curl -I -k --tlsv1.3 --tls-max 1.3 https://fborroto.42.fr

@@ -15,9 +15,9 @@ if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ]; then
 
     # Grant root privileges and set up database and user
     echo "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;
-          GRANT ALL ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
-          GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
-          FLUSH PRIVILEGES;" | mysql -u root
+        GRANT ALL ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
+        GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
+        FLUSH PRIVILEGES;" | mysql -u root
 
     # Import WordPress data if the SQL dump is available
     if [ -f "/usr/local/bin/wordpress.sql" ]; then
