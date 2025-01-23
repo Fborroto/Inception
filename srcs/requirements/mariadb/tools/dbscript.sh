@@ -1,37 +1,43 @@
 #!/bin/sh
 
-# Initialize MySQL database
-mysql_install_db --user=mysql
+# Install MariaDB
+mysql_install_db
 
-# Start MySQL in the background
+# Wait for MariaDB to be ready
+sleep 10
+
+# Start MariaDB in safe mode
 /usr/bin/mysqld_safe &
 
-# Wait for MySQL to initialize
+# Wait for MariaDB to start
 sleep 10
 
 # Check if the database already exists
-if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ]; then
-    echo "Creating database and user..."
-
-    # Grant root privileges and set up database and user
-    echo "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;
-        GRANT ALL ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
-        GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
-        FLUSH PRIVILEGES;" | mysql -u root
-
-    # Import WordPress data if the SQL dump is available
-    if [ -f "/usr/local/bin/wordpress.sql" ]; then
-        echo "Importing database from wordpress.sql..."
-        mysql -u root -p"$MYSQL_ROOT_PASSWORD" $MYSQL_DATABASE < /usr/local/bin/wordpress.sql
-    else
-        echo "No SQL dump found at /usr/local/bin/wordpress.sql."
-    fi
+if [ -d "/var/lib/mysql/$MYSQL_DATABASE" ]
+then
+	echo "Database already exists"
 else
-    echo "Database '$MYSQL_DATABASE' already exists. Skipping creation."
+	# Secure the MariaDB installation
+	mysql_secure_installation << EOF
+
+	Y
+	Y
+	$MYSQL_ROOT_PASSWORD
+	$MYSQL_ROOT_PASSWORD
+	Y
+	n
+	Y
+	Y
+EOF
+
+	# Set up root user and create the database
+	echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD'; FLUSH PRIVILEGES;" | mysql -uroot
+	echo "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE; GRANT ALL ON $MYSQL_DATABASE.* TO '$MYSQL_ADMIN'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; FLUSH PRIVILEGES;" | mysql -u root
+	mysql -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < /usr/local/bin/wordpress.sql
 fi
 
-# Stop MySQL gracefully
+# Shutdown MariaDB
 mysqladmin -u root -p"$MYSQL_ROOT_PASSWORD" shutdown
 
-# Execute any additional commands
+# Execute the passed command
 exec "$@"
